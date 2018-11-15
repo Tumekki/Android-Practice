@@ -21,8 +21,11 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="21dp"
-            android:text="Tuukan arvauspeli"
-            android:textAppearance="@android:style/TextAppearance.Large" />
+            android:fontFamily="cursive"
+            android:text="Tuukka's Guessing Game"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView2"
@@ -61,7 +64,9 @@
             android:layout_marginTop="156dp"
             android:layout_marginEnd="146dp"
             android:layout_marginRight="146dp"
-            android:text="Guess!" />
+            android:fontFamily="casual"
+            android:text="Guess!"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/labelOutput"

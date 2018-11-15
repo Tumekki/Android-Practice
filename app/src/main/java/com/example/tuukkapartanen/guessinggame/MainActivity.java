@@ -2,7 +2,9 @@ package com.example.tuukkapartanen.guessinggame;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 message = guess + " is correct. You win! Let's play again!";
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                int gamesWon = preferences.getInt("gamesWon", 0) + 1;
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putInt("gamesWon", gamesWon);
+                editor.apply();
                 newGame(); }
         } catch (Exception e) {
             message = "Enter a whole number between 1 and " + range + ".";
@@ -63,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
         btnGuess = (Button) findViewById(R.id.btnGuess);
         labelOutput = (TextView) findViewById(R.id.labelOutput);
         labelRange = (TextView) findViewById(R.id.textView2);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        range = preferences.getInt("range", 100);
+
         newGame();
         btnGuess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,14 +120,17 @@ public class MainActivity extends AppCompatActivity {
                         switch(item) {
                             case 0:
                                 range = 10;
+                                storeRange(10);
                                 newGame();
                                 break;
                             case 1:
                                 range = 100;
+                                storeRange(100);
                                 newGame();
                                 break;
                             case 2:
                                 range = 1000;
+                                storeRange(1000);
                                 newGame();
                                 break; }
                         dialog.dismiss();
@@ -129,6 +142,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_newgame: newGame();
                 return true;
             case R.id.action_gamestats:
+                SharedPreferences preferences =
+                        PreferenceManager.getDefaultSharedPreferences(this);
+                int gamesWon = preferences.getInt("gamesWon", 0);
+                AlertDialog statDialog = new AlertDialog.Builder(MainActivity.this).create();
+                statDialog.setTitle("Guessing Game Stats");
+                statDialog.setMessage("You have won "+gamesWon+" games. Way to go!");
+                statDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) { dialog.dismiss();
+                    } });
+                statDialog.show();
                 return true;
             case R.id.action_about:
                 AlertDialog aboutDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -146,5 +169,12 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    public void storeRange(int newRange) {
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("range", newRange);
+        editor.apply();
     }
 }
